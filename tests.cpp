@@ -61,3 +61,52 @@ TEST_CASE("Test mandel_gen") {
     CHECK(value <= 1.0);
   }
 }
+
+
+TEST_CASE("Test julia_gen") {
+  fractals f(100);// Create a fractals object with a dimension of 100
+  std::complex<double> z(0.2,0.2);
+
+  f.julia_gen(z); // Generate the Mandelbrot set with a scaling factor of 1
+
+  // Get the generated board from the fractals object
+  std::vector<double>& board = f.getBoard();
+
+  // Check if the dimensions of the generated board are correct
+  CHECK(board.size() == 10000);
+
+  // Check if the values in the board are within the expected range
+  for (double value : board) {
+    CHECK(value >= 0.0);
+    CHECK(value <= 1.0);
+  }
+}
+
+
+TEST_CASE("Testing smkdir") {
+  fractals f(10);
+  const std::string directoryName = "test_directory";
+
+  // Check if the directory exists before running the test
+  bool directoryExistsBefore = std::filesystem::exists(directoryName);
+
+  // Call the smkdir function
+  f.smkdir(directoryName);
+
+  // Check if the directory was created
+  bool directoryExistsAfter = std::filesystem::exists(directoryName);
+  CHECK(directoryExistsAfter);
+
+  // Clean up: Remove the directory created during the test
+  std::filesystem::remove(directoryName);
+
+  // Check if the directory was successfully removed
+  bool directoryExistsAfterCleanup = std::filesystem::exists(directoryName);
+  CHECK_FALSE(directoryExistsAfterCleanup);
+
+  // Check if the directory existed before running the test
+  CHECK_EQ(directoryExistsBefore, std::filesystem::exists(directoryName));
+}
+
+
+
