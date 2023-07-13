@@ -28,3 +28,36 @@ TEST_CASE("num_iter") {
     CHECK(result == 0);
   }
 }
+
+
+TEST_CASE("BoardConstructorTest - DefaultValues") {
+    const int dim = 10;
+    fractals board(dim);
+
+    CHECK(board.getDimension() == dim);
+
+    const std::vector<double>& boardData = board.getBoard();
+    CHECK(boardData.size() == dim * dim);
+    /*
+    for (const auto& value : boardData) {
+        CHECK(value == 1.0);
+    }
+    */
+}
+
+TEST_CASE("Test mandel_gen") {
+  fractals f(100); // Create a fractals object with a dimension of 100
+  f.mandel_gen(1); // Generate the Mandelbrot set with a scaling factor of 1
+
+  // Get the generated board from the fractals object
+  const std::vector<double>& board = f.getBoard();
+
+  // Check if the dimensions of the generated board are correct
+  CHECK(board.size() == 10000);
+
+  // Check if the values in the board are within the expected range
+  for (double value : board) {
+    CHECK(value >= 0.0);
+    CHECK(value <= 1.0);
+  }
+}
