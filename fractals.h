@@ -52,7 +52,7 @@ public:
   }
 
   void julia_gen(const std::complex<double> c) {
-    //generates the julia set as a function of a complex variable
+    // generates the julia set as a function of a complex variable
     const int max_iterations = 100;
     const double z_real_bound = 4 / (this->dim - 1);
     const double z_im_bound = 4 / (this->dim - 1);
@@ -69,8 +69,8 @@ public:
   }
 
   const std::string smkdir(const std::string &name) {
-    //smart mkdir, checks if there is a dir and if there is not it creates it
-    //it needs to be called only once
+    // smart mkdir, checks if there is a dir and if there is not it creates it
+    // it needs to be called only once
     std::filesystem::path directoryPath =
         std::filesystem::current_path() / name;
 
@@ -87,12 +87,13 @@ public:
     return name;
   }
 
-  
-  
   void save_to_file_j(std::complex<double> c, const std::string &p) {
-    std::string path = p;
-    std::string filename =
-        path + std::to_string(c.real()) + "_" + std::to_string(c.imag()) + ".ppm";
+    /* saves the board in directory created with smkdir */
+    std::string dir_name = smkdir(p) + '/'; // don't call smkdir in main!!!!
+    std::string path = "/home/isacco/EZFRACTALS/";
+    std::string filename = path + dir_name + std::to_string(c.real()) + "_" +
+                           std::to_string(c.imag()) + ".ppm";
+    std::cout << filename;
     std::ofstream outfile(filename);
     outfile << "P3\n";
     outfile << dim << " " << dim << "\n";
@@ -110,4 +111,57 @@ public:
 
     outfile.close();
   }
+
+  void save_to_file_m(double scaling_factor, const std::string &p) {
+    // saves to a given path
+    std::string dir_name = smkdir(p) + '/'; // don't call smkdir in main!!!!
+    std::string path = "/home/isacco/EZFRACTALS/";
+    std::string filename = path + dir_name + "output_scaling_" +
+                           std::to_string(scaling_factor) + ".ppm";
+    std::ofstream outfile(filename);
+    // format for ppm file
+    outfile << "P3\n";
+    outfile << dim << " " << dim << "\n";
+    outfile << "255\n";
+
+    for (int i = 0; i < this->dim; i++) {
+      for (int j = 0; j < this->dim; j++) {
+        int pixel_value =
+            static_cast<int>(this->board[i * this->dim + j] * 255);
+        outfile << pixel_value << " " << pixel_value << " " << pixel_value
+                << " ";
+      }
+      outfile << "\n";
+    }
+
+    outfile.close();
+  }
 };
+
+
+
+void generate_scaled_outputs(int dim, double start_scaling_factor,
+                             double end_scaling_factor,
+                             double scaling_factor_step, std::string dir) {
+  for (double scaling_factor = start_scaling_factor;
+       scaling_factor >= end_scaling_factor;
+       scaling_factor -= scaling_factor_step) {
+    fractals board(dim);
+    board.mandel_gen(scaling_factor);
+    board.save_to_file_m(scaling_factor, dir);
+  }
+}
+
+void generate_julia_set(int dim, int num_points,
+                        double step, std::string dir) {
+
+  for (int i = 0; i < num_points; ++i) {
+    double real_c = -0.5 + i * step;
+    double imag_c = -0.5 + i * step;
+    std::complex<double> c(real_c, imag_c);
+
+    fractals board(dim);
+    board.julia_gen(c);
+    board.save_to_file_j(c, dir);
+  }
+}
