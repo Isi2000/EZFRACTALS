@@ -50,23 +50,22 @@ public:
       }
     }
   }
-
-  void julia_gen(const std::complex<double> c) {
-    // generates the julia set as a function of a complex variable
+void julia_gen(const std::complex<double> &c) {
+    // Generates the Julia set as a function of a complex variable 'c'
     const int max_iterations = 100;
-    const double z_real_bound = 4 / (this->dim - 1);
-    const double z_im_bound = 4 / (this->dim - 1);
-    for (int x = 0; x < this->dim; ++x) {
-      for (int y = 0; y < this->dim; ++y) {
-        double real = x * z_real_bound - 2;
-        double im = y * z_im_bound - 2;
-        int number_iterations =
-            num_iter(std::complex<double>(real, im), c, max_iterations);
-        this->board[y * this->dim + x] =
-            1.0 - number_iterations / static_cast<double>(max_iterations);
-      }
+    const double z_real_bound = 4.0 / (dim - 1);
+    const double z_im_bound = 4.0 / (dim - 1);
+
+    for (int x = 0; x < dim; ++x) {
+        for (int y = 0; y < dim; ++y) {
+            double real = x * z_real_bound - 2.0;
+            double im = y * z_im_bound - 2.0;
+            int number_iterations = num_iter(std::complex<double>(real, im), c, max_iterations);
+            board[y * dim + x] = 1.0 - number_iterations / static_cast<double>(max_iterations);
+        }
     }
-  }
+}
+    
 
   const std::string smkdir(const std::string &name) {
     // smart mkdir, checks if there is a dir and if there is not it creates it
@@ -156,8 +155,8 @@ void generate_julia_set(int dim, int num_points,
                         double step, std::string dir) {
 
   for (int i = 0; i < num_points; ++i) {
-    double real_c = -0.5 + i * step;
-    double imag_c = -0.5 + i * step;
+    double real_c = 0.0 + i * step;
+    double imag_c = 0.0 + i * step;
     std::complex<double> c(real_c, imag_c);
 
     fractals board(dim);
