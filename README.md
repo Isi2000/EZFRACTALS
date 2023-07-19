@@ -18,10 +18,9 @@ For the Mandelbrot fractal, the initial value of $z_{0}$ remains constant for al
 To generate the Julia fractal, both $z_{0}$ and c are specific values determined by the position on the complex plane. The initial value $z_{0}$ varies across the plane, while c remains fixed. Similar to the Mandelbrot set, points for which the sequence of $z_{n}$ values remain bounded are considered to be part of the Julia set.
 
 
-//MAKE SURE you see the images
-![Mandelbrot Set](https://github.com/Isi2000/EZFRACTALS/blob/main/IMAGES/output_scaling_1.000000.ppm)
-![Julia Set example](https://github.com/Isi2000/EZFRACTALS/blob/main/IMAGES/0.350000_0.350000.ppm)
 
+![config](./Mandelbrot_and_julia_sets/1.000000_0.000000.ppm)
+![config](./Mandelbrot_and_julia_sets/0.300000_-0.450000.ppm)
 
 # Code
 
@@ -81,9 +80,21 @@ Header file which does most of the work, it contains the function that calculate
    - The function iterates through the points and calculates the 'c' value based on the step and the loop index.
    - It then generates the Julia fractal for each 'c' value using `julia_gen` and saves it to a separate PPM file using `save_to_file_j`.
 
-10. **`main` Function**:
-    - The `main` function is the entry point of the program.
-    - It initializes parameters such as the grid dimension, the number of points for the Julia set, the circle radius, and the output directory name.
-    - The `generate_julia_circle` function is called, which generates Julia fractals around a circle with the given radius and saves them to the output directory.
 
+
+## main.cpp
+
+It's the file in which the user calls the function in order to actually generate the fractals. When using the code in its main features one usually only calls file from here and only compiles this cpp file.
+
+## giffer.py
+
+This file is useful to visualize the rendering in cool ways. The purpose of this file is that of creating gif from a directory full of images.
+
+1. **`gif_maker` Function**:
+   - creates a gif from images in a given directory
+   - `path` is the path from which to get the images
+   - `name` is the name of the gif
+   - it is worth noting that the gif is saved in working directory
+
+# How to use it
 
