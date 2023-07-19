@@ -69,30 +69,32 @@ void julia_gen(const std::complex<double> &c) {
 
   const std::string smkdir(const std::string &name) {
     // smart mkdir, checks if there is a dir and if there is not it creates it
-    // it needs to be called only once
     std::filesystem::path directoryPath =
         std::filesystem::current_path() / name;
 
     if (std::filesystem::exists(directoryPath) &&
         std::filesystem::is_directory(directoryPath)) {
-      std::cout << "Directory already exists." << '\n';
+      std::cout << " ... " << "\n"; // ... = dir arleady existing
     } else {
       if (std::filesystem::create_directory(directoryPath)) {
-        std::cout << "Directory created successfully." << '\n';
+        std::cout << ":)" << '\n';
       } else {
-        std::cout << "Failed to create directory." << '\n';
+        std::cout << ":(" << '\n';
       }
     }
     return name;
   }
 
   void save_to_file_j(std::complex<double> c, const std::string &p) {
-    /* saves the board in directory created with smkdir */
-    std::string dir_name = smkdir(p) + '/'; // don't call smkdir in main!!!!
-    std::string path = "/home/isacco/EZFRACTALS/";
+    /* 
+     saves the board in directory created with smkdir 
+     c: constant associated with julia set
+     p: directory name
+     */
+    std::string dir_name = smkdir(p) + '/'; 
+    std::string path = "/home/isacco/EZFRACTALS/"; //no ./ because I might wanna save it somewhere else
     std::string filename = path + dir_name + std::to_string(c.real()) + "_" +
                            std::to_string(c.imag()) + ".ppm";
-    std::cout << filename;
     std::ofstream outfile(filename);
     outfile << "P3\n";
     outfile << dim << " " << dim << "\n";
@@ -112,9 +114,13 @@ void julia_gen(const std::complex<double> &c) {
   }
 
   void save_to_file_m(double scaling_factor, const std::string &p) {
-    // saves to a given path
-    std::string dir_name = smkdir(p) + '/'; // don't call smkdir in main!!!!
-    std::string path = "/home/isacco/EZFRACTALS/";
+    /*
+    saves the board in directory created with smkdir 
+    scaling_factor: scaling coefficient to zoom
+    p: directory name
+    */  
+    std::string dir_name = smkdir(p) + '/'; 
+    std::string path = "/home/isacco/EZFRACTALS/"; //no ./ because I might wanna save it somewhere else
     std::string filename = path + dir_name + "output_scaling_" +
                            std::to_string(scaling_factor) + ".ppm";
     std::ofstream outfile(filename);
@@ -153,10 +159,9 @@ void generate_scaled_outputs(int dim, double start_scaling_factor,
 
 void generate_julia_set(int dim, int num_points,
                         double step, std::string dir) {
-
   for (int i = 0; i < num_points; ++i) {
     double real_c = 0.0 + i * step;
-    double imag_c = 0.0 + i * step;
+    double imag_c = 0.0 - i * step;
     std::complex<double> c(real_c, imag_c);
 
     fractals board(dim);
