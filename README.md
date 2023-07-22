@@ -17,10 +17,11 @@ For the Mandelbrot fractal, the initial value of $z_{0}$ remains constant for al
 
 To generate the Julia fractal, both $z_{0}$ and c are specific values determined by the position on the complex plane. The initial value $z_{0}$ varies across the plane, while c remains fixed. Similar to the Mandelbrot set, points for which the sequence of $z_{n}$ values remain bounded are considered to be part of the Julia set.
 
+<p float="left">
+   <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/j.png" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/j.png" width="400" height="400" />
 
-
-![](./README_IMG/m.png = 250x250)
-![](./README_IMG/j.png = 250x250)
+   <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/m.png" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/m.png" width="400" height="400" />
+</p>
 
 # Code
 
@@ -94,9 +95,12 @@ This file is useful to visualize the rendering in cool ways. The purpose of this
    - creates a gif from images in a given directory
    - `path` is the path from which to get the images
    - `name` is the name of the gif
-   - it is worth noting that the gif is saved in working directory
 
 # Results
 
+In this section on can find a few of the things the code can render
+<p align="center">
+   <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" width="400" height="400" />
 
-![](./README_IMG/julia_set.gif)
+   <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set1.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set1.gif" width="400" height="400" />
+</p>
