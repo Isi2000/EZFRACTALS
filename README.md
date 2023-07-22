@@ -19,8 +19,8 @@ To generate the Julia fractal, both $z_{0}$ and c are specific values determined
 
 
 
-![config](./Mandelbrot_and_julia_sets/1.000000_0.000000.ppm)
-![config](./Mandelbrot_and_julia_sets/0.300000_-0.450000.ppm)
+![](./README_IMG/m.png = 250x250)
+![](./README_IMG/j.png = 250x250)
 
 # Code
 
@@ -96,5 +96,7 @@ This file is useful to visualize the rendering in cool ways. The purpose of this
    - `name` is the name of the gif
    - it is worth noting that the gif is saved in working directory
 
-# How to use it
+# Results
 
+
+![](./README_IMG/julia_set.gif)

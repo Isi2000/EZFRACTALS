@@ -70,7 +70,7 @@ TEST_CASE("Test julia_gen") {
   f.julia_gen(z); // Generate the Mandelbrot set with a scaling factor of 1
 
   // Get the generated board from the fractals object
-  std::vector<double>& board = f.getBoard();
+  const std::vector<double>& board = f.getBoard();
 
   // Check if the dimensions of the generated board are correct
   CHECK(board.size() == 10000);
