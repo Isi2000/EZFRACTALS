@@ -44,6 +44,8 @@ Header file which does most of the work, it contains the function that calculate
 
 3. **`mandel_gen` Function**:
    - This function generates the Mandelbrot set and zooms into it based on a scaling factor.
+   - Numerical constants are choosen in a way so that the plot is centered and good to view
+   - zoom_real and zoom_imaginary are the coordinates for the zoom in the Argand Gauss plane 
    - It takes a scaling factor as input, which determines the extent of zoom into the Mandelbrot set.
    - The function calculates the complex coordinates for each point on the grid based on the scaling factor and the grid dimensions.
    - It then calls the `num_iter` function to compute the fractal value for each point and stores it in the `board` vector.
@@ -100,7 +102,7 @@ This file is useful to visualize the rendering in cool ways. The purpose of this
 
 In this section on can find a few of the things the code can render:
 
-##Julia Sets
+## Julia Sets
 
 <p align="center">
    <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" width="400" height="400" />
