@@ -17,9 +17,9 @@ def gif_maker(path, gif_name):
         img.append(imageio.imread(path + fn))
     for fn_ in filenames[::-1]:
         img.append(imageio.imread(path + fn_))
-    imageio.mimsave(gif_name, img, duration = len(filenames)/10)
+    imageio.mimsave(gif_name, img, duration = len(filenames)/10, loop = 0)
 
-#gif_maker(path1, "julia_set.gif")
+gif_maker(path1, "julia_set.gif")
 gif_maker(path2, "mandelbrot_set.gif")
 
 
