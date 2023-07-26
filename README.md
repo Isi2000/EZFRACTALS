@@ -98,9 +98,17 @@ This file is useful to visualize the rendering in cool ways. The purpose of this
 
 # Results
 
-In this section on can find a few of the things the code can render
+In this section on can find a few of the things the code can render:
+
+##Julia Sets
+
 <p align="center">
    <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set.gif" width="400" height="400" />
 
    <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set1.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG/julia_set1.gif" width="400" height="400" />
+</p>
+
+## Mandelbrot Zoom
+<p align = "center">
+   <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG//mandelbrot_set.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG//mandelbrot_set.gif" width="400" height="400" />
 </p>
