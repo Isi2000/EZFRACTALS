@@ -9,8 +9,9 @@
 int num_iter(std::complex<double> z0, std::complex<double> c, int max_iter,
              double thresh = 4) {
   /*
-function that given a point on the complex plane a given constant c calculates
-the orbit given by the recursive formula z = z**2 + c of that point
+    function that given a point on the complex plane a given constant c
+    calculates the orbit given by the recursive formula z = z**2 + c of that
+    point
    */
 
   std::complex<double> zn = std::move(z0);
@@ -32,21 +33,23 @@ public:
   fractals(int dim) : dim(dim), board(dim * dim, 1.0) {}
   int getDimension() const { return dim; }
   const std::vector<double> &getBoard() const { return board; }
-  void mandel_gen(const double &scaling_factor, const double &zoom_real = -4.0,
+  void mandel_gen(const double &scaling_factor = 1.0,
+                  const double &zoom_real = -2.00,
                   const double &zoom_imaginary = -1.13) {
     /*
        generates the mandelbrot set and can zoom in an arbitrary point (re, im)
        scaling_factor: how much it scales
-       zoom_real: real coordinate in Argand Gauss plane
-       zoom_imaginary: imag coordinate in Argand Gauss plane
+       zoom_real: real coordinate in Argand Gauss plane for zoom
+       zoom_imaginary: imag coordinate in Argand Gauss plane zoom
+       The numeric constants are choosen in a way so that the img is centered
     */
 
-    const double z_real_bound = (2.48) * scaling_factor / (this->dim - 1);
+    const double z_real_bound = 2.48 * scaling_factor / (this->dim - 1);
     const double z_im_bound = 2.26 * scaling_factor / (this->dim - 1);
     for (int x = 0; x < this->dim; ++x) {
       for (int y = 0; y < this->dim; ++y) {
-        double real = x * z_real_bound + zoom_real * scaling_factor;
-        double im = y * z_im_bound + zoom_imaginary * scaling_factor;
+        double real = (x)*z_real_bound - 2 * scaling_factor + zoom_real;
+        double im = y * z_im_bound - 1.13 * scaling_factor + zoom_imaginary;
         int number_iterations =
             num_iter(0, std::complex<double>(real, im), 300);
         this->board[y * this->dim + x] = 1.0 - number_iterations / 300.0;
@@ -159,8 +162,8 @@ void generate_scaled_outputs(const int &dim, const double &start_scaling_factor,
                              const double &end_scaling_factor,
                              const double &scaling_factor_step,
                              const std::string &dir,
-                             const double &zoom_real = -4.0,
-                             const double &zoom_imaginary = -1.13) {
+                             const double &zoom_real = -0.7004,
+                             const double &zoom_imaginary = -0.1) {
 
   /*
     generates images of the mandelbrot set with different scaling factors
@@ -168,7 +171,8 @@ void generate_scaled_outputs(const int &dim, const double &start_scaling_factor,
     start_scaling_factor: initial value of the scaling factor
     end_scaling: last value of the scaling factor
     dir: location for the generated files
-    last 2 parameters are reference to the gen function
+    last 2 parameters are reference to the gen function:
+    The default is a fairly intresting point to zoom, change them and have fun!
   */
 
   for (double scaling_factor = start_scaling_factor;
