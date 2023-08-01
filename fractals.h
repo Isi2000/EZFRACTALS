@@ -1,19 +1,12 @@
-#include <cmath>
 #include <complex>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <filesystem>
 
 int num_iter(std::complex<double> z0, std::complex<double> c, int max_iter,
              double thresh = 4) {
-  /*
-    function that given a point on the complex plane a given constant c
-    calculates the orbit given by the recursive formula z = z**2 + c of that
-    point
-   */
-
   std::complex<double> zn = std::move(z0);
   int it = 0;
   while ((std::norm(zn) < thresh) && it < max_iter) {
@@ -23,123 +16,55 @@ int num_iter(std::complex<double> z0, std::complex<double> c, int max_iter,
   return it;
 }
 
-class fractals {
-  // board to rapresent the mandelbrot and julia fractals
+const std::string smkdir(const std::string &name) {
+  std::filesystem::path directoryPath = std::filesystem::current_path() / name;
+
+  if (std::filesystem::exists(directoryPath) &&
+      std::filesystem::is_directory(directoryPath)) {
+    std::cout << "Directory already exists.\n";
+  } else {
+    if (std::filesystem::create_directory(directoryPath)) {
+      std::cout << "Directory created!!! :)\n";
+    } else {
+      std::cout << "Failed to create directory.\n";
+    }
+  }
+  return name;
+}
+
+class Fractals {
 private:
   int dim;
   std::vector<double> board;
 
 public:
-  fractals(int dim) : dim(dim), board(dim * dim, 1.0) {}
+  Fractals(int dim) : dim(dim), board(dim * dim, 1.0) {}
   int getDimension() const { return dim; }
   const std::vector<double> &getBoard() const { return board; }
-  void mandel_gen(const double &scaling_factor = 1.0,
-                  const double &zoom_real = -2.00,
-                  const double &zoom_imaginary = -1.13) {
-    /*
-       generates the mandelbrot set and can zoom in an arbitrary point (re, im)
-       scaling_factor: how much it scales
-       zoom_real: real coordinate in Argand Gauss plane for zoom
-       zoom_imaginary: imag coordinate in Argand Gauss plane zoom
-       The numeric constants are choosen in a way so that the img is centered
-    */
 
-    const double z_real_bound = 2.48 * scaling_factor / (this->dim - 1);
-    const double z_im_bound = 2.26 * scaling_factor / (this->dim - 1);
+  void board_gen(const double &z_real_bound,
+                 const double &z_im_bound,
+                 const double &center_real,
+                 const double &center_im,
+                 std::complex<double> c = std::complex<double>(0.3, -0.4))
+  {
+    const int max_iterations = 300;
     for (int x = 0; x < this->dim; ++x) {
       for (int y = 0; y < this->dim; ++y) {
-        double real = (x)*z_real_bound - 2 * scaling_factor + zoom_real;
-        double im = y * z_im_bound - 1.13 * scaling_factor + zoom_imaginary;
-        int number_iterations =
-            num_iter(0, std::complex<double>(real, im), 300);
-        this->board[y * this->dim + x] = 1.0 - number_iterations / 300.0;
-      }
-    }
-  }
-  void julia_gen(const std::complex<double> &c) {
-    /*
-       Generates the Julia set as a function of a complex variable 'c'
-    */
-    const int max_iterations = 100;
-    const double z_real_bound = 4.0 / (dim - 1);
-    const double z_im_bound = 4.0 / (dim - 1);
-
-    for (int x = 0; x < dim; ++x) {
-      for (int y = 0; y < dim; ++y) {
-        double real = x * z_real_bound - 2.0;
-        double im = y * z_im_bound - 2.0;
+        double real = x * z_real_bound + center_real;
+        double im = y * z_im_bound + center_im;
         int number_iterations =
             num_iter(std::complex<double>(real, im), c, max_iterations);
-        board[y * dim + x] =
+        this->board[y * this->dim + x] =
             1.0 - number_iterations / static_cast<double>(max_iterations);
       }
     }
   }
 
-  const std::string smkdir(const std::string &name) {
-    /*
-       smart mkdir, checks if there is a dir and if there is not it creates it
-    */
-
-    std::filesystem::path directoryPath =
-        std::filesystem::current_path() / name;
-
-    if (std::filesystem::exists(directoryPath) &&
-        std::filesystem::is_directory(directoryPath)) {
-      std::cout << " ... "
-                << "\n"; // ... = dir arleady existing
-    } else {
-      if (std::filesystem::create_directory(directoryPath)) {
-        std::cout << "Directory created!!! :)" << '\n';
-      } else {
-        std::cout << ":(" << '\n';
-      }
-    }
-    return name;
-  }
-
-  void save_to_file_j(const std::complex<double> &c, const std::string &p) {
-    /*
-     saves the board in directory created with smkdir
-     c: constant associated with julia set
-     p: directory name
-     */
-
-    std::string dir_name = smkdir(p) + '/';
+  void save_to_file(const std::string &filename, const std::string &dirname) {
     std::string path = "./";
-    std::string filename = path + dir_name + std::to_string(c.real()) + "_" +
-                           std::to_string(c.imag()) + ".ppm";
-    std::ofstream outfile(filename);
-    outfile << "P3\n";
-    outfile << dim << " " << dim << "\n";
-    outfile << "255\n";
-
-    for (int i = 0; i < this->dim; i++) {
-      for (int j = 0; j < this->dim; j++) {
-        int pixel_value =
-            static_cast<int>(this->board[i * this->dim + j] * 255);
-        outfile << pixel_value << " " << pixel_value << " " << pixel_value
-                << " ";
-      }
-      outfile << "\n";
-    }
-
-    outfile.close();
-  }
-
-  void save_to_file_m(const double &scaling_factor, const std::string &p) {
-    /*
-    saves the board in directory created with smkdir
-    scaling_factor: scaling coefficient to zoom
-    p: directory name
-    */
-
-    std::string dir_name = smkdir(p) + '/';
-    std::string path = "./";
-    std::string filename = path + dir_name + "output_scaling_" +
-                           std::to_string(scaling_factor) + ".ppm";
-    std::ofstream outfile(filename);
-    // format for ppm file
+    std::string fn = path + dirname + "/" + filename + ".ppm";
+    std::ofstream outfile(fn);
     outfile << "P3\n";
     outfile << dim << " " << dim << "\n";
     outfile << "255\n";
@@ -158,48 +83,61 @@ public:
   }
 };
 
-void generate_scaled_outputs(const int &dim, const double &start_scaling_factor,
-                             const double &end_scaling_factor,
-                             const double &scaling_factor_step,
-                             const std::string &dir,
-                             const double &zoom_real = -0.7004,
-                             const double &zoom_imaginary = -0.1) {
+class Mandelbrot : public Fractals {
+  // class that inherits from Fractals for creating and visualizing the
+  // mandelbrot set with different scaling on different points
 
-  /*
-    generates images of the mandelbrot set with different scaling factors
-    dim: resolution of the board
-    start_scaling_factor: initial value of the scaling factor
-    end_scaling: last value of the scaling factor
-    dir: location for the generated files
-    last 2 parameters are reference to the gen function:
-    The default is a fairly intresting point to zoom, change them and have fun!
-  */
+public:
+  using Fractals::Fractals; // uses the same initializer
 
-  for (double scaling_factor = start_scaling_factor;
-       scaling_factor >= end_scaling_factor;
-       scaling_factor -= scaling_factor_step) {
-    fractals board(dim);
-    board.mandel_gen(scaling_factor, zoom_real, zoom_imaginary);
-    board.save_to_file_m(scaling_factor, dir);
+  std::complex<double> boundries(const double &scaling_factor) {
+    /*
+      calculates the boundries of an image of the mandelbrot set for a given
+      scaling factor
+    */
+
+    const double unscaled_real_domain = 2.48;
+    const double unscaled_im_domain = 2.26;
+    const double z_real_bound =
+        unscaled_real_domain * scaling_factor / (getDimension() - 1);
+    const double z_im_bound =
+        unscaled_im_domain * scaling_factor / (getDimension() - 1);
+    return std::complex(z_real_bound, z_im_bound);
   }
-}
 
-void generate_julia_set(const int &dim, const int &num_points,
-                        const double &step, const std::string &dir) {
-
-  /*
-    generates images of julia sets with different complex constant
-    dim: resolution of the board
-    num_points: number of images
-    end_scaling: last value of the scaling factor
-    dir: location for the generated files
-   */
-  for (int i = 0; i < num_points; ++i) {
-    double real_c = 0.0 + i * step;
-    double imag_c = 0.0 - i * step;
-    std::complex<double> c(real_c, imag_c);
-    fractals board(dim);
-    board.julia_gen(c);
-    board.save_to_file_j(c, dir);
+  void mandelbrot_generator(const double &scaling_factor,
+                            const double &center_real,
+                            const double &center_im) {
+    /*
+      Creates the mandelbrot set and saves it to file
+      scaling_factor: it's the level of zoom on the image
+      center_real: where the image is centered on the real axis
+      where the image is centered on the real axis
+     */
+    const double real_bound = boundries(scaling_factor).real();
+    const double im_bound = boundries(scaling_factor).imag();
+    board_gen(real_bound, im_bound, center_real, center_im);
+    std::string filename = std::to_string(scaling_factor);
+    save_to_file(filename, "MANDELBROT");
   }
-}
+};
+
+class Julia : public Fractals {
+public:
+  using Fractals::Fractals; // uses the same initializer
+
+  void julia_generator(const std::complex<double> &c) {
+    const double unscaled_real_domain = 4;
+    const double unscaled_im_domain = 4;
+
+    const double real_bound = unscaled_real_domain / (getDimension() - 1);
+    const double im_bound = unscaled_im_domain / (getDimension() - 1);
+
+    double center_real = -2.0;
+    double center_im = -2.0;
+    board_gen(real_bound, im_bound, center_real, center_im, c);
+    std::string filename =
+        std::to_string(c.real()) + "_" + std::to_string(c.imag());
+    save_to_file(filename, "JULIA");
+  }
+};
