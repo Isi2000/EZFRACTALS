@@ -123,15 +123,19 @@ public:
       where the image is centered on the real axis
      */
     bool mandelbrot_mode = true; //sets the mode to mandelbrot
+
     const double real_bound = boundries(scaling_factor).real();
     const double im_bound = boundries(scaling_factor).imag();
-    board_gen(real_bound, im_bound, center_real, center_im, mandelbrot_mode);
+    const double zoom_center_real = center_real - 2.0 * scaling_factor;
+    const double zoom_center_im = center_im - 1.13 * scaling_factor;
+    
+    board_gen(real_bound, im_bound, zoom_center_real, zoom_center_im, mandelbrot_mode);
     std::string filename = std::to_string(scaling_factor);
     save_to_file(filename, this->data_dir);
   }
   
   void mandelbrot_multiple_images(const int &end_scaling_factor, const double &step, const double &center_zoom_real, const double &center_zoom_im) {
-    double scaling_factor = 1.0;
+    double scaling_factor = 3.0;
     while (scaling_factor > end_scaling_factor) {
       scaling_factor = scaling_factor - step;
       mandelbrot_generator(scaling_factor, center_zoom_real, center_zoom_im);
@@ -146,7 +150,8 @@ public:
   Julia(int dim): Fractals(dim), data_dir("JULIA") {smkdir(this->data_dir);}
 
   void julia_generator(const std::complex<double> &c) {
-    bool julia_mode = false;
+
+    bool julia_mode = false; //sets the mode to Julia
     
     const double unscaled_real_domain = 4;
     const double unscaled_im_domain = 4;
