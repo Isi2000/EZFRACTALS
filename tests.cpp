@@ -59,9 +59,32 @@ TEST_CASE("num_iter") {
     CHECK(result < max_iter);
   }
 }
+TEST_CASE("Test smkdir function") {
+  /*
+    Tests the smart mkdir function in the following cases:
+    creates a new directory that does not exist
+    calls on a direcoty that already exist
+  */
+  SUBCASE("smkdir of non existing dir"){
+    // Create a new directory
+    std::string dirName1 = "test_directory_1";
+    std::string result1 = smkdir(dirName1);
+    REQUIRE(result1 == dirName1);
+    std::filesystem::remove_all(dirName1); // Cleanup
+  }
+    SUBCASE("smkdir of a existing dir"){
+    //calls smkdir on directory that already exists
+    std::string dirName2 = "test_directory_2";
+    smkdir(dirName2); // Creating the directory first
+    std::string result2 = smkdir(dirName2);
+    REQUIRE(result2 == dirName2);
+    std::filesystem::remove_all(dirName2); // Cleanup
+  }
+}
+
 
 TEST_CASE("Fractals getters") {
-
+  
   /*
     the getters of the Fractals class are methods that should return the vals
     of its private attributes
@@ -91,6 +114,14 @@ TEST_CASE("Fractals getters") {
 // Function to read PPM file as binary data, needed for test
 
 std::vector<uint8_t> readPPM(const std::string& filename) {
+  /**
+  Reads a PPM (Portable Pixmap) image file and returns its content as a vector of bytes.
+ 
+ filename: The filename of the PPM image file to be read.
+  A std::vector<uint8_t> containing the binary data of the PPM image.
+ */
+  
+  //runtime error is somehow the file cannot be opened
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
         throw std::runtime_error("Cannot open file: " + filename);
@@ -106,8 +137,25 @@ std::vector<uint8_t> readPPM(const std::string& filename) {
 }
 
 
-TEST_CASE("mandelbrot_generator test") {
+TEST_CASE("generators test") {
+
+  //test the generators with benchmark images stored in the TEST_IMAGES folder
+  //to look at the benchmark images look at test_images.md in TEST_IMAGES
+  // The size of the images choosen is 400
+
   int dim = 400;
+
+  SUBCASE("mandelbrot_generator test") {
+    /*
+      tests the mandelbrot_generator function:
+      The benchmark image params, which are the same passed to the generator, are the following:
+      scaling_factor = 1.0
+      center_real = 0.0
+      center_im = 0.0
+      
+    checks that the images are the same size, then checks each pixel is the same
+    */
+      
   Mandelbrot test_mandelbrot_generation(dim);
   //image with scaling_factor 1 centered in 0, 0
   double scaling_factor = 1.0;
@@ -116,7 +164,7 @@ TEST_CASE("mandelbrot_generator test") {
   test_mandelbrot_generation.mandelbrot_generator(scaling_factor, center_real, center_im);
 
   const std::string generatedImageFile = "./MANDELBROT/1.000000.ppm";
-  const std::string referenceImageFile = "./TEST_IMG/1.000000.ppm";
+  const std::string referenceImageFile = "./TEST_IMAGES/1.000000.ppm";
 
     // Read binary data from generated and reference images
     std::vector<uint8_t> generatedImageData = readPPM(generatedImageFile);
@@ -129,4 +177,36 @@ TEST_CASE("mandelbrot_generator test") {
     for (size_t i = 0; i < generatedImageData.size(); ++i) {
         CHECK(generatedImageData[i] == referenceImageData[i]);
     }
+}
+
+  SUBCASE("julia_generator test") {
+    /*
+      tests the mandelbrot_generator function:
+      The benchmark image params, which are the same passed to the generator, are the following:
+      dim = 400
+      complex constant (c) = 0.3, 0.45
+      
+    checks that the images are the same size, then checks each pixel is the same
+    */
+  Julia test_julia_generation(dim);
+  //image with scaling_factor 1 centered in 0, 0
+  std::complex<double> c(0.3, -0.45);
+  
+  test_julia_generation.julia_generator(c);
+
+  const std::string generatedImageFile = "./JULIA/0.300000_-0.450000.ppm";
+  const std::string referenceImageFile = "./TEST_IMAGES/0.300000_-0.450000.ppm";
+
+    // Read binary data from generated and reference images
+    std::vector<uint8_t> generatedImageData = readPPM(generatedImageFile);
+    std::vector<uint8_t> referenceImageData = readPPM(referenceImageFile);
+
+    // Compare the sizes of the images
+    CHECK(generatedImageData.size() == referenceImageData.size());
+
+    // Compare the content of the images byte by byte
+    for (size_t i = 0; i < generatedImageData.size(); ++i) {
+        CHECK(generatedImageData[i] == referenceImageData[i]);
+    }
+}
 }
