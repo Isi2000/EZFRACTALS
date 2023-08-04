@@ -24,20 +24,23 @@ int num_iter(std::complex<double> z0, std::complex<double> c, int max_iter,
   return it;
 }
 
-const std::string smkdir(const std::string &name) {
+
+const std::string smkdir(const std::string& name) {
+  /*
+    smart mkdir works on multiple cases:
+    if dir does not exist or if name is not a dir -> creates a directory
+    if fails to create a directory for any reason in previous case -> warns
+  */
+
   std::filesystem::path directoryPath = std::filesystem::current_path() / name;
-  bool existence = std::filesystem::exists(directoryPath);
-  bool isdir = std::filesystem::is_directory(directoryPath);
-  if ( existence && isdir) {
-    std::cout << "Directory already exists.\n";
-  } else {
-    if (std::filesystem::create_directory(directoryPath)) {
-      std::cout << "Directory created!!! :)\n";
-    } else {
-      std::cout << "Failed to create directory.\n";
-    }
-  }
-  return name;
+    if (!std::filesystem::exists(directoryPath) || !std::filesystem::is_directory(directoryPath)) {
+        if (std::filesystem::create_directory(directoryPath)) {
+            std::cout << "Directory created!!! :)\n";
+        } else {
+            std::cout << "Failed to create directory.\n";
+        }
+    } 
+    return name;
 }
 
 class Fractals {
@@ -214,9 +217,10 @@ public:
     /*
       generates multiple images of julia sets by calling the generate julia function
       how the c constant changes is chosen arbitrarly, any other orbit can be coorect as long as it doesn't diverge
-    */
+    
       num_points: number of images generated
       step: how much does the c constant changes between image generated  
+    */
       for (int i = 0; i < num_points; ++i) {
 	double real_c = 0.0 + i * step;
 	double imag_c = 0.0 - i * step;

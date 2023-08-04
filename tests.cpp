@@ -6,13 +6,27 @@
 TEST_CASE("num_iter") {
 
   // Tests for the num_iter function
+  /* 
+     the num_iter function takes as input 4 arguments:
+     z0: a point in the complex plane
+     c: a complex constant 
+     max_iter: the max number of iteration
+     threshould: an arbitraty value to find if the orbit is finite
+     The return value is the number of iterations for each z,c couple
+
+     The 3 cases below test 3 couples for which respectively there is:
+     
+     finiet orbit for every nuber of iterations
+     diverging oribit from the start
+     diverging orbit after a while
+  */
   
   SUBCASE("Point within threshold") {
     // Case in which the orbit stays limited in range max_iter
-    std::complex<double> z0(0.5, 0.5);
-    std::complex<double> c(0.1, 0.1);
-    int max_iter = 50;
-    double thresh = 4;
+    std::complex<double> z0(0.5, 0.5); 
+    std::complex<double> c(0.1, 0.1); 
+    int max_iter = 50; 
+    double thresh = 4; 
 
     int result = num_iter(z0, c, max_iter, thresh);
 
@@ -34,19 +48,29 @@ TEST_CASE("num_iter") {
   SUBCASE("num_iter in between 0 and max_iter") {
     //expected to divergence in between 0 and max_iters
 
-    std::complex<double> z0(-1.9, 0.2);
-    std::complex<double> c(0.1, 0.1);
-    int max_iter = 100;
-    double thresh = 10000.0;
+    std::complex<double> z0(-1.9, 0.2); //coordinate in complex plane
+    std::complex<double> c(0.1, 0.1); //complex constant
+    int max_iter = 100; //max_iteraions
+    double thresh = 4.0; //threshold
 
     int result = num_iter(z0, c, max_iter, thresh);
+
     CHECK(result > 0);
     CHECK(result < max_iter);
   }
 }
 
 TEST_CASE("Fractals getters") {
-  //tests the so called getters of the class
+
+  /*
+    the getters of the Fractals class are methods that should return the vals
+    of its private attributes
+    
+    This test contatins 2 tests which check respectively:
+    getter for dim -> getDimension()
+    getter for board -> getBoard()
+  */
+  
   const int dim = 100;
   Fractals fractal(dim);
   
@@ -63,9 +87,9 @@ TEST_CASE("Fractals getters") {
 }
 
 
-//Now I need to test generated images to a benchmark one
 
-// Function to read PPM file as binary data
+// Function to read PPM file as binary data, needed for test
+
 std::vector<uint8_t> readPPM(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
@@ -82,7 +106,7 @@ std::vector<uint8_t> readPPM(const std::string& filename) {
 }
 
 
-TEST_CASE("Compare generated image to reference image") {
+TEST_CASE("mandelbrot_generator test") {
   int dim = 400;
   Mandelbrot test_mandelbrot_generation(dim);
   //image with scaling_factor 1 centered in 0, 0
