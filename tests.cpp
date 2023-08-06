@@ -208,5 +208,78 @@ TEST_CASE("generators test") {
     for (size_t i = 0; i < generatedImageData.size(); ++i) {
         CHECK(generatedImageData[i] == referenceImageData[i]);
     }
+  }
 }
+
+
+
+TEST_CASE("mandelbrot_multiple_images test") {
+    int dim = 400;
+    double end_scaling_factor = 0.1;
+    double scaling_factor_step = 0.1;
+    const double center_real = -0.74001;
+    const double center_im = 0.0;
+
+    Mandelbrot test_M_m_i(dim);
+    test_M_m_i.mandelbrot_multiple_images(end_scaling_factor, scaling_factor_step, center_real, center_im);
+
+    SUBCASE("Test Generated Files Exist") {
+        CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") / "1.000000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") / "0.900000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") / "0.800000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") / "0.700000.ppm"));
+    }
+    /*
+    SUBCASE("Benchmark image") {
+      const std::string generatedImageFile = "./MANDELBROT/0.900000.ppm";
+      const std::string referenceImageFile = "./TEST_IMAGES/0.900000.ppm";
+
+    // Read binary data from generated and reference images
+    std::vector<uint8_t> generatedImageData = readPPM(generatedImageFile);
+    std::vector<uint8_t> referenceImageData = readPPM(referenceImageFile);
+
+    // Compare the sizes of the images
+    CHECK(generatedImageData.size() == referenceImageData.size());
+
+    // Compare the content of the images byte by byte
+    for (size_t i = 0; i < generatedImageData.size(); ++i) {
+        CHECK(generatedImageData[i] == referenceImageData[i]);
+    }
 }
+    */
+}
+
+TEST_CASE("generate_julia_set test") {
+    int num_points = 5;
+    double step = 0.1;
+    int dim = 400;
+
+    Julia test_J_m_i(dim);
+    test_J_m_i.julia_multiple_images(num_points, step);
+
+    SUBCASE("Test Generated Files Exist") {
+        CHECK(std::filesystem::exists(std::filesystem::path("JULIA") / "0.000000_0.000000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("JULIA") / "0.100000_-0.100000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("JULIA") / "0.200000_-0.200000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("JULIA") / "0.300000_-0.300000.ppm"));
+        CHECK(std::filesystem::exists(std::filesystem::path("JULIA") / "0.400000_-0.400000.ppm"));
+    }
+
+    SUBCASE("Benchmark image") {      
+  const std::string generatedImageFile = "./JULIA/0.300000_-0.300000.ppm";
+  const std::string referenceImageFile = "./TEST_IMAGES/0.300000_-0.300000.ppm";
+
+    // Read binary data from generated and reference images
+    std::vector<uint8_t> generatedImageData = readPPM(generatedImageFile);
+    std::vector<uint8_t> referenceImageData = readPPM(referenceImageFile);
+
+    // Compare the sizes of the images
+    CHECK(generatedImageData.size() == referenceImageData.size());
+
+    // Compare the content of the images byte by byte
+    for (size_t i = 0; i < generatedImageData.size(); ++i) {
+        CHECK(generatedImageData[i] == referenceImageData[i]);
+    }
+}
+ }
+
