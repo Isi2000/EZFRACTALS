@@ -138,7 +138,11 @@ The `Julia` class is derived from the `Fractals` class and is used to create and
 
 ## main.cpp
 
-It's the file in which the user calls the function in order to actually generate the fractals. When using the code in its main features one usually only calls file from here and only compiles this cpp file.
+It's the file in which the user calls the function in order to actually generate the fractals.
+
+When using the code in its main features one usually only calls file from here and only compiles this cpp file.
+
+Some examples of how to use the `main.cpp` file can be found in the User section
 
 ## giffer.py
 

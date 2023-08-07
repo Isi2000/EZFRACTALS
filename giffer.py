@@ -2,8 +2,8 @@ import imageio
 import os
 import numpy as np
 
-path1 = './julia_set/'
-path2 = './mandelbrot_zoom/'
+path1 = './JULIA/'
+path2 = './MANDELBROT/'
 
 def gif_maker(path, gif_name):
     """
