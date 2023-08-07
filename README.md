@@ -3,6 +3,77 @@
 This project aims at creating a tool to visualize the madelbrot set and julia fractals.
 Mandelbrot and Julia fractals are one of the most intresting visual representations of complex number's dynamics in mathematics. Both fractals are generated through the same recursive equation known as the "Julia Set" equation, making them closely related yet visually distinct.
 
+
+## Installation
+
+To use the Fractal Generator, you need to have a C++ compiler and the necessary libraries installed. Here are the steps to set up the project:
+
+1. Clone or download the repository.
+2. Compile the C++ code using your preferred C++ compiler.
+
+## User Section
+
+### C++ Code
+
+To use the Fractal Generator and customize the fractals rendered, follow these steps:
+
+1. Open the `main.cpp` file in your preferred text editor or IDE.
+
+2. Either compile it and run it right away or change some of the params first:
+
+#### Examples
+
+Here are some examples of generation that can also be found in the main. By changing the parameters in the following examples one can generate all sorts of fractals
+
+- Generate a single Mandelbrot set:
+
+```
+Mandelbrot mandelbrot(image_dimension);
+double scaling_factor = 2.0;
+double center_real = 0.0;
+double center_im = 0.0;
+mandelbrot.mandelbrot_generator(scaling_factor, center_real, center_im);
+```
+
+- Generate multiple Mandelbrot sets with different scaling factors:
+
+```
+Mandelbrot mandelbrot(image_dimension);
+int end_scaling_factor = 0;
+double step = 0.1;
+double zoom_center_real = -0.8;
+double zoom_center_im = 0.156;
+mandelbrot.mandelbrot_multiple_images(end_scaling_factor, step, zoom_center_real, zoom_center_im);
+```
+
+- Generate a single Julia set:
+
+```
+Julia julia(image_dimension);
+std::complex<double> c(0.355, 0.355);
+julia.julia_generator(c);
+```
+
+- Generate multiple Julia sets with different complex constants 'c':
+
+```
+Julia julia(image_dimension);
+int num_points = 5;
+double step_julia = 0.1;
+julia.julia_multiple_images(num_points, step_julia);
+```
+
+### Python gifs
+
+To generate gifs with the python code follow the following steps:
+
+- make sure that the main contains exclusively a call on multiple_image functions
+
+- run the bash script `pygif.sh` which does the following things:
+  - remove directories with previous images
+  - compile and run the cpp code in the main
+  - execute the python code
+
 ## Julia Set equation
 
 The mathematical basis of both Mandelbrot and Julia fractals lies in the iteration of a simple recursive equation involving complex numbers. Let's consider the equation in its basic form:
@@ -29,61 +100,41 @@ This section will be dedicated to explaining extensively how each piece of the c
 
 ## fractals.h
 
+
 Header file which does most of the work, it contains the function that calculates the fractal, the class that is the board where they are rendered and the functiions that save the renderings in given directories.
 
-1. **`num_iter` Function**:
-   - This function computes the number of iterations needed for a point on the complex plane, represented by `z0`, to escape the given threshold (`thresh`) or reach the maximum number of iterations (`max_iter`).
-   - It takes two complex numbers `z0` and `c` as inputs and iterates the formula `z = z^2 + c` until the norm of `z` exceeds the threshold or the maximum number of iterations is reached.
-   - The function returns the number of iterations taken to escape or reach the threshold.
+### Fractals Class
 
-2. **`fractals` Class**:
-   - This class represents a grid of fractals with a specified dimension.
-   - It contains a private data member `board`, which is a 1D vector representing the grid of fractal values.
-   - The class provides a constructor that initializes the `board` vector with all values set to 1.0 (white).
-   - It also has member functions like `mandel_gen` and `julia_gen`, which generate Mandelbrot and Julia fractals, respectively.
+The `Fractals` class is a base class containing useful methods and attributes for fractals rendering.
 
-3. **`mandel_gen` Function**:
-   - This function generates the Mandelbrot set and zooms into it based on a scaling factor.
-   - Numerical constants are choosen in a way so that the plot is centered and good to view
-   - zoom_real and zoom_imaginary are the coordinates for the zoom in the Argand Gauss plane 
-   - It takes a scaling factor as input, which determines the extent of zoom into the Mandelbrot set.
-   - The function calculates the complex coordinates for each point on the grid based on the scaling factor and the grid dimensions.
-   - It then calls the `num_iter` function to compute the fractal value for each point and stores it in the `board` vector.
+#### Public Methods
 
-4. **`julia_gen` Function**:
-   - This function generates the Julia set for a given complex variable `c`.
-   - It takes a complex number `c` as input, representing the constant in the Julia set formula `z = z^2 + c`.
-   - The function calculates the complex coordinates for each point on the grid, similar to `mandel_gen`.
-   - It calls the `num_iter` function to compute the fractal value for each point and stores it in the `board` vector.
+- `Fractals(int dim)`: Constructor to initialize the fractal generator with the given image dimension.
+- `int getDimension() const`: Get the dimension of the image.
+- `const std::vector<double> &getBoard() const`: Get the vector of pixels representing the Argand Gauss plane.
+- `void board_gen(const double &z_real_bound, const double &z_im_bound, const double &center_real, const double &center_im, std::complex<double> c = std::complex<double>(0.0, 0.0), bool mandel_or_julia = true)`: Modify the board vector by applying the recursive formula to assign a numerical value (color) to each coordinate in the complex plane.
+- `void save_to_file(const std::string &filename, const std::string &dirname)`: Save the board (image) to a file in the specified directory with the given filename.
 
-5. **`smkdir` Function**:
-   - This function is a helper function that creates a directory with the provided name if it does not already exist.
-   - It takes a directory name as input and checks whether the directory exists.
-   - If the directory does not exist, it creates the directory using `std::filesystem::create_directory`.
+### Mandelbrot Class
 
-6. **`save_to_file_j` Function**:
-   - This function saves the board (grid of Julia fractals) to a file in the specified directory.
-   - It takes a complex number `c` (used to generate the specific Julia fractal) and the directory name as input.
-   - The function constructs the filename using the real and imaginary parts of `c` and the provided directory name.
-   - It then opens an output file stream and writes the PPM file format headers and the pixel values for each point on the grid.
+The `Mandelbrot` class is derived from the `Fractals` class and is used to create and visualize the Mandelbrot set.
 
-7. **`save_to_file_m` Function**:
-   - This function is similar to `save_to_file_j`, but it saves the board (grid of Mandelbrot set) to a file.
-   - It takes a scaling factor and the directory name as input and constructs the filename accordingly.
+#### Public Methods
 
-8. **`generate_scaled_outputs` Function**:
-   - This function generates multiple Mandelbrot sets with different scaling factors.
-   - It takes the grid dimension, start scaling factor, end scaling factor, scaling factor step, and the output directory name as input.
-   - The function iterates through scaling factors in reverse order and generates the Mandelbrot set for each scaling factor using `mandel_gen`.
-   - It saves each generated set to a separate PPM file using `save_to_file_m`.
+- `Mandelbrot(int dim)`: Constructor to initialize the Mandelbrot set generator with the given image dimension.
+- `std::complex<double> boundries(const double &scaling_factor)`: Calculate the boundaries of an image of the Mandelbrot set for a given scaling factor.
+- `void mandelbrot_generator(const double &scaling_factor, const double &center_real, const double &center_im)`: Create the Mandelbrot set and save it to a file.
+- `void mandelbrot_multiple_images(const int &end_scaling_factor, const double &step, const double &zoom_center_real, const double &zoom_center_im)`: Generate multiple images of the Mandelbrot set by calling the `mandelbrot_generator` function.
 
-9. **`generate_julia_set` Function**:
-   - This function generates multiple Julia sets with different complex variables 'c'.
-   - It takes the grid dimension, the number of points, the step size, and the output directory name as input.
-   - The function iterates through the points and calculates the 'c' value based on the step and the loop index.
-   - It then generates the Julia fractal for each 'c' value using `julia_gen` and saves it to a separate PPM file using `save_to_file_j`.
+### Julia Class
 
+The `Julia` class is derived from the `Fractals` class and is used to create and visualize Julia sets.
 
+#### Public Methods
+
+- `Julia(int dim)`: Constructor to initialize the Julia set generator with the given image dimension.
+- `void julia_generator(const std::complex<double> &c)`: Generate a single Julia set for a given complex constant `c`.
+- `void julia_multiple_images(const int &num_points, const double &step)`: Generate multiple images of Julia sets by calling the `julia_generator` function.
 
 ## main.cpp
 
