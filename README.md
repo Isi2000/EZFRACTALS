@@ -169,3 +169,54 @@ In this section on can find a few of the things the code can render:
 <p align = "center">
    <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG//mandelbrot_set.gif" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/README_IMG//mandelbrot_set.gif" width="400" height="400" />
 </p>
+
+
+
+# Translation_of_cpp_code_to_python.ipynb
+
+This code provides a Python implementation for generating and visualizing fractals using the Mandelbrot and Julia set algorithms. The original C++ code has been translated into Python to achieve the same functionalities. Below is an overview of the key components and functionalities of the translated Python code.
+
+I hope that this section will help non cpp coders better understand its cpp-optimized counterpart :)
+
+## Functions
+
+### `num_iter(z0, c, max_iter, thresh=4)`
+This function calculates the number of iterations required for a given point `z0` and complex constant `c` to either diverge or reach a maximum number of iterations (`max_iter`). It uses the recursive formula `z = z**2 + c` and returns the number of iterations.
+
+### `smkdir(name)`
+A utility function for creating directories. It creates a directory if it doesn't exist or if the provided name is not a directory.
+
+## Classes
+
+### `Fractals`
+A base class that contains methods and attributes for rendering fractals. It initializes the image dimension and the board (image) data.
+
+- `get_dimension()`: Returns the dimension of the image.
+- `get_board()`: Returns the board data representing the coordinates of the complex plane.
+- `board_gen(z_real_bound, z_im_bound, center_real, center_im, c=0j, mandel_or_julia=True)`: Modifies the board by applying the recursive formula to assign values (colors) to each coordinate in the complex plane.
+
+### `Mandelbrot(Fractals)`
+A class for creating and visualizing the Mandelbrot set. It inherits from the `Fractals` class and introduces specific methods for generating Mandelbrot sets.
+
+- `boundries(scaling_factor)`: Calculates the boundaries of an image of the Mandelbrot set for a given scaling factor.
+- `mandelbrot_generator(scaling_factor, center_real, center_im)`: Creates the Mandelbrot set and saves it to a file.
+- `mandelbrot_multiple_images(end_scaling_factor, step, zoom_center_real, zoom_center_im)`: Generates multiple images of the Mandelbrot set by varying the scaling factor.
+
+### `Julia(Fractals)`
+A class for creating and visualizing Julia sets. Similar to the `Mandelbrot` class, it inherits from the `Fractals` class and introduces methods for generating Julia sets.
+
+- `julia_generator(c)`: Generates a single Julia set for a given complex constant `c`.
+- `julia_multiple_images(num_points, step)`: Generates multiple images of Julia sets by varying the complex constant `c`.
+
+## Example Usage
+
+The example usage section at the end of the code demonstrates how to create instances of the `Mandelbrot` and `Julia` classes and generate images of the corresponding fractals. The `Mandelbrot` object is used to generate a sequence of Mandelbrot images with varying scaling factors and zoom centers. The `Julia` object generates multiple images of Julia sets by varying the complex constant `c`.
+
+## How to Use
+
+1. Ensure you have Python installed on your system.
+2. Copy and paste the code into a Python file (e.g., `fractal_renderer.py`).
+3. Run the script using a Python interpreter.
+4. The program will generate Mandelbrot and Julia images in the respective directories ("MANDELBROT" and "JULIA") within the working directory.
+
+The code provides an illustrative example of fractal rendering in Python, and you can extend and modify it to explore different fractal sets and rendering techniques.
