@@ -16,7 +16,7 @@ TEST_CASE("num_iter") {
 
      The 3 cases below test 3 couples for which respectively there is:
 
-     finiet orbit for every nuber of iterations
+     finite orbit for every nuber of iterations
      diverging oribit from the start
      diverging orbit after a while
   */
@@ -83,7 +83,6 @@ TEST_CASE("Test smkdir function") {
 }
 
 TEST_CASE("Fractals getters") {
-
   /*
     the getters of the Fractals class are methods that should return the vals
     of its private attributes
@@ -102,8 +101,8 @@ TEST_CASE("Fractals getters") {
   }
 
   SUBCASE("Fractals getBoard function") {
-    const std::vector<double> &board = fractal.getBoard();
     // Tests that the getBoard function works properly
+    const std::vector<double> &board = fractal.getBoard();
     CHECK(board.size() == dim * dim);
   }
 }
@@ -177,9 +176,9 @@ TEST_CASE("generators test") {
 
   SUBCASE("julia_generator test") {
     /*
-      tests the mandelbrot_generator function:
+      tests the julia_generator function:
       The benchmark image params, which are the same passed to the generator,
-    are the following: dim = 400 complex constant (c) = 0.3, 0.45
+    are the following: dim = 400 complex constant (c) = 0.3, -0.45
 
     checks that the images are the same size, then checks each pixel is the same
     */
@@ -208,6 +207,13 @@ TEST_CASE("generators test") {
 }
 
 TEST_CASE("mandelbrot_multiple_images test") {
+  /*
+    tests the mandelbrot_multiple_images function
+    in particular it tests that:
+    - the function creates images in the correct path
+    - the images generated are correct by comparing them to a benchmark
+  */
+    
   int dim = 400;
   double end_scaling_factor = 0.7;
   double scaling_factor_step = 0.1;
@@ -219,6 +225,7 @@ TEST_CASE("mandelbrot_multiple_images test") {
                                         center_real, center_im);
 
   SUBCASE("Test Generated Files Exist") {
+    // Tests that images are created in correct path
     CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") /
                                   "1.000000.ppm"));
     CHECK(std::filesystem::exists(std::filesystem::path("MANDELBROT") /
@@ -230,6 +237,7 @@ TEST_CASE("mandelbrot_multiple_images test") {
   }
 
   SUBCASE("Benchmark image") {
+    //tests one of the images against a benchmark one
     const std::string generatedImageFile = "./MANDELBROT/0.800000.ppm";
     const std::string referenceImageFile = "./TEST_IMAGES/0.800000.ppm";
 
@@ -247,7 +255,13 @@ TEST_CASE("mandelbrot_multiple_images test") {
   }
 }
 
-TEST_CASE("generate_julia_set test") {
+TEST_CASE("julia_multiple_images test") {
+  /*
+    tests the julia_multiple_images function
+    in particular it tests that:
+    - the function creates images in the correct path
+    - the images generated are correct by comparing them to a benchmark
+  */
   int num_points = 5;
   double step = 0.1;
   int dim = 400;
@@ -256,6 +270,7 @@ TEST_CASE("generate_julia_set test") {
   test_J_m_i.julia_multiple_images(num_points, step);
 
   SUBCASE("Test Generated Files Exist") {
+    // Tests that images are created in correct path
     CHECK(std::filesystem::exists(std::filesystem::path("JULIA") /
                                   "0.000000_0.000000.ppm"));
     CHECK(std::filesystem::exists(std::filesystem::path("JULIA") /
@@ -269,6 +284,7 @@ TEST_CASE("generate_julia_set test") {
   }
 
   SUBCASE("Benchmark image") {
+    //tests one of the images against a benchmark one
     const std::string generatedImageFile = "./JULIA/0.300000_-0.300000.ppm";
     const std::string referenceImageFile =
         "./TEST_IMAGES/0.300000_-0.300000.ppm";

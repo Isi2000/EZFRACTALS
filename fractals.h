@@ -45,14 +45,10 @@ const std::string smkdir(const std::string &name) {
 }
 
 class Fractals {
-  // Mother class containing useful methods and attributes for fractals
-  // rendering
+  // Mother class containing useful methods and attributes for fractals rendering
 private:
   int dim; // dimension of the image
-  std::vector<double>
-      board; // vector of the pixels of the images, rapresents the coordinates
-             // of the Argand Gauss plane on which the orbits are calculated
-
+  std::vector<double> board; // vector rapresenting the pixels of the images
 public:
   Fractals(int dim) : dim(dim), board(dim * dim, 1.0) {}
   int getDimension() const { return dim; }
@@ -120,13 +116,10 @@ public:
 };
 
 class Mandelbrot : public Fractals {
-  // class that inherits from Fractals for creating and visualizing the
-  // mandelbrot set
+  // class that inherits from Fractals
+  // creates and renders the mandelbrot set
 private:
-  // everytime a Mandelbrot object is instatiated smkdir is called on a
-  // MANDELBROT named string -> it creates a directory to store the data in
   std::string data_dir;
-
 public:
   Mandelbrot(int dim) : Fractals(dim), data_dir("MANDELBROT") {
     smkdir(this->data_dir);
@@ -196,13 +189,10 @@ public:
 };
 
 class Julia : public Fractals {
-  // class that inherits from Fractals for creating and visualizing the  julia
-  // sets
+  // class that inherits from Fractals
+  // creates and renders the  julia sets
 private:
-  // everytime a Mandelbrot object is instatiated smkdir is called on a
-  // MANDELBROT named string -> it creates a directory to store the data in
   std::string data_dir;
-
 public:
   Julia(int dim) : Fractals(dim), data_dir("JULIA") { smkdir(this->data_dir); }
 

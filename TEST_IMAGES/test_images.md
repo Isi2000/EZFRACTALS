@@ -1,4 +1,4 @@
-#Images
+# Images
 
 The benchmark images for the test are generated with the folowing parameters
 
@@ -19,3 +19,7 @@ The benchmark images for the test are generated with the folowing parameters
 
    <img src="https://github.com/Isi2000/EZFRACTALS/blob/main/TEST_IMAGES/0.300000_-0.450000.png" data-canonical-src="https://github.com/Isi2000/EZFRACTALS/blob/main/TEST_IMAGES/0.300000_-0.450000.png" width="400" height="400" />
 
+
+## Other Images
+
+This directory contains also other images, these are used for other more trivial tests and as benchmark images if needed
